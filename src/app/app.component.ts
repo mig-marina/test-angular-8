@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
 import { GET_RANDOM_NUMBER_INTERVAL, POLLING_INTERVAL, USER_LOGGED_MESSAGE } from './constants/app.metadata';
-import { interval, of } from 'rxjs';
-import { catchError, switchMap, takeWhile, throttleTime } from 'rxjs/operators';
+import { BehaviorSubject, Observable, interval, of } from 'rxjs';
+import { catchError, startWith, switchMap, takeWhile, throttleTime } from 'rxjs/operators';
 import { RandomNumbersService } from './services/random-numbers.service';
+import { FormControl } from '@angular/forms';
+import { USER_MESSAGES } from './mocks/user-messages.mock';
+import { Message } from './interfaces/message.interface';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +17,10 @@ export class AppComponent implements OnInit, OnDestroy {
   public currentMessage: string = '';
   public randomNumberListData: string = '';
 
+  public searchControl = new FormControl('');
+  public userMessages: Message[] = USER_MESSAGES;
+  public filteredUserMessage: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>(this.userMessages);
+
   private randomNumberList: number[] = [];
   private componentActive = true;
 
@@ -23,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.longPolling();
     this.subscribeToChangeData();
     this.updateRandomNumberList();
+    this.subscribeToSearch();
   }
 
   ngOnDestroy(): void {
@@ -57,5 +65,21 @@ export class AppComponent implements OnInit, OnDestroy {
         this.randomNumberList.push(res);
         this.randomNumberListData = this.randomNumberList.join(', ');
       });
+  }
+
+  private subscribeToSearch(): void {
+    this.searchControl.valueChanges
+    .pipe(
+      startWith(''),
+      switchMap(value => this.searchMessages(value || ''))
+    ).subscribe((res) => {
+      this.filteredUserMessage.next(res);
+    });
+  }
+
+  private searchMessages(keyword: string): Observable<Message[]> {
+    const filterValue = keyword.toLowerCase();
+
+    return of(this.userMessages.filter(message => message.content.toLowerCase().includes(filterValue)))
   }
 }

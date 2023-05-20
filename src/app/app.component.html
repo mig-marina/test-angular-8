@@ -8,5 +8,22 @@
       <h3>List of random numbers:</h3>
       <p>{{ randomNumberListData }}</p>
     </section>
+    <section>
+      <h3>Search messages:</h3>
+      <form>
+        <mat-form-field>
+          <input
+            type="text"
+            matInput
+            [formControl]="searchControl"
+            placeholder="enter your message text"
+          />
+        </mat-form-field>
+      </form>
+      <div *ngFor="let message of filteredUserMessage | async">
+        <p>{{ message.content }}</p>
+        <p>{{ message.author }}</p>
+      </div>
+    </section>
   </mat-card-content>
 </mat-card>
