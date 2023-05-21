@@ -8,6 +8,12 @@
     </mat-card-header>
     <mat-card-content>
       <section class="mat-card-content__sub-module">
+        <button mat-button class="action-btn" (click)="onClick()">
+          {{ buttonTittle }}
+        </button>
+      </section>
+
+      <section class="mat-card-content__sub-module">
         <app-tool-bar (setTheme)="setTheme($event)"></app-tool-bar>
       </section>
 
