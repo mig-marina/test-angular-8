@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from './services/auth.service';
-import { GET_RANDOM_NUMBER_INTERVAL, POLLING_INTERVAL, USER_LOGGED_MESSAGE } from './constants/app.metadata';
+import { DEFAULT_THEME, GET_RANDOM_NUMBER_INTERVAL, POLLING_INTERVAL, THEMES, USER_LOGGED_MESSAGE } from './constants/app.metadata';
 import { BehaviorSubject, Observable, interval, of } from 'rxjs';
 import { catchError, startWith, switchMap, takeWhile, throttleTime } from 'rxjs/operators';
 import { RandomNumbersService } from './services/random-numbers.service';
@@ -17,9 +17,13 @@ export class AppComponent implements OnInit, OnDestroy {
   public currentMessage: string = '';
   public randomNumberListData: string = '';
 
-  public searchControl = new FormControl('');
+  public searchControl: FormControl = new FormControl('');
   public userMessages: Message[] = USER_MESSAGES;
   public filteredUserMessage: BehaviorSubject<Message[]> = new BehaviorSubject<Message[]>(this.userMessages);
+
+  public templateThemes: string[] = THEMES;
+  public currentClasslist: string = `wrapper theme-${DEFAULT_THEME}`;
+  public templateThemeSet: FormControl = new FormControl('default');
 
   private randomNumberList: number[] = [];
   private componentActive = true;
@@ -31,6 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeToChangeData();
     this.updateRandomNumberList();
     this.subscribeToSearch();
+    this.subscribeToChangeTheme();
   }
 
   ngOnDestroy(): void {
@@ -69,17 +74,26 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private subscribeToSearch(): void {
     this.searchControl.valueChanges
-    .pipe(
-      startWith(''),
-      switchMap(value => this.searchMessages(value || ''))
-    ).subscribe((res) => {
-      this.filteredUserMessage.next(res);
-    });
+      .pipe(
+        startWith(''),
+        switchMap(value => this.searchMessages(value || '')),
+        takeWhile(() => this.componentActive),
+      ).subscribe((res) => {
+        this.filteredUserMessage.next(res);
+      });
   }
 
   private searchMessages(keyword: string): Observable<Message[]> {
     const filterValue = keyword.toLowerCase();
 
     return of(this.userMessages.filter(message => message.content.toLowerCase().includes(filterValue)))
+  }
+
+  private subscribeToChangeTheme(): void {
+    this.templateThemeSet.valueChanges
+      .pipe(takeWhile(() => this.componentActive))
+      .subscribe((res: string) => {
+        this.currentClasslist = `wrapper theme-${res}`;
+      });
   }
 }

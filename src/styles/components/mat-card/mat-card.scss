@@ -1,0 +1,38 @@
+@import './../../black-theme/main.scss';
+
+mat-card.mat-card {
+  padding: 1rem 2rem;
+
+  .mat-card-header {
+    padding: 1rem 0;
+
+    .mat-card-header-text,
+    .mat-card-title,
+    .mat-card-subtitle {
+      margin: 0;
+    }
+  }
+
+  .mat-card-content {
+    padding: 0;
+  }
+}
+
+.theme-black {
+  mat-card.mat-card {
+    .mat-card-header {
+      padding-left: 4px;
+      background-color: map-get($black-color-scheme, 900);
+      color: map-get($black-color-scheme, 100);
+    }
+
+    .mat-card-title {
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 24px;
+    }
+
+    .mat-card-subtitle {
+      color: map-get($black-color-scheme, 100);
+    }
+  }
+}

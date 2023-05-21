@@ -1,0 +1,15 @@
+@import './../core/color-scheme.scss';
+
+.theme-black {
+  &.wrapper {
+    background-color: map-get($black-color-scheme, 900);
+  }
+
+  h3 {
+    padding: 10px 4px;
+    background-color: map-get($black-color-scheme, 900);
+    font-family: 'Shadows Into Light', cursive;
+    font-size: 24px;
+    color: map-get($black-color-scheme, 100);
+  }
+}
