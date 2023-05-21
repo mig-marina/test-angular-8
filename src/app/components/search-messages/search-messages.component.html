@@ -1,0 +1,15 @@
+<h3>Search messages:</h3>
+<form>
+  <mat-form-field>
+    <input
+      type="text"
+      matInput
+      [formControl]="searchControl"
+      placeholder="enter your message text"
+    />
+  </mat-form-field>
+</form>
+<div *ngFor="let message of filteredUserMessage | async" class="user-message">
+  <p class="message-content">{{ message.content }}</p>
+  <p class="message-author">{{ message.author }}</p>
+</div>

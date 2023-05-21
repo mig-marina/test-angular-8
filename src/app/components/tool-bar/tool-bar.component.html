@@ -1,0 +1,15 @@
+<h3 class="template-themes-label">Please select a theme:</h3>
+<mat-radio-group
+  aria-labelledby="template-theme-radio-group-label"
+  class="template-themes-radio-group"
+  [formControl]="templateThemeSet"
+>
+  <mat-radio-button
+    class="theme-radio-button"
+    *ngFor="let theme of templateThemes"
+    [value]="theme"
+    [checked]="theme === DEFAULT_THEME"
+  >
+    {{ theme }}
+  </mat-radio-button>
+</mat-radio-group>
