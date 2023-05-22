@@ -9,6 +9,8 @@ import { MaterialModule } from './modules/material.module';
 import { RandomNumbersComponent } from './components/random-numbers/random-numbers.component';
 import { SearchMessagesComponent } from './components/search-messages/search-messages.component';
 import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
+import { StoreModule } from '@ngrx/store';
+import { ConversationReducer } from './state/conversation.reducer';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,9 @@ import { ToolBarComponent } from './components/tool-bar/tool-bar.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
+    StoreModule.forRoot({
+      conversation: ConversationReducer,
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
